@@ -23,9 +23,65 @@
 
 ---
 
+## 🎬 See It In Action
+
+**[▶️ Watch: Pizza Ordering with Claude](examples/01-pizza-ordering/)** (60 sec) • **[▶️ Watch: Medical Triage Agent](examples/02-medical-triage/)** (15 sec)
+
+### 🍕 Pizza Ordering - Chat Interface
+
+![Pizza Ordering Demo](examples/01-pizza-ordering/demo.gif)
+
+**What you just saw:**
+- User asks "what do you recommend?" → Claude explains each option with reasoning
+- User says "pick something for me" → Claude intelligently selects and explains why
+- Questions follow a strict order (crust → category → toppings → size)
+- Natural, helpful conversation, but protocol-enforced
+
+The guide controls the workflow. Claude provides the intelligence.
+
+[Explore the code →](examples/01-pizza-ordering/)
+
+---
+
+### 🏥 Medical Triage - Autonomous Agent
+
+![Medical Triage Demo](examples/02-medical-triage/demo.gif)
+
+**What you just saw:**
+- Agent autonomously screens for emergency symptoms (protocol requirement)
+- Checks medical history, classifies severity
+- Makes escalation decision and saves audit trail
+- All while the guide enforces clinical protocols
+
+The guide ensures compliance. The agent does the work.
+
+[Explore the code →](examples/02-medical-triage/)
+
+---
+
 ## 💡 The Solution: Tool-as-Guide Pattern
 
-**Key insight:** What if the workflow engine is a *tool* that the LLM actively queries?
+### 🗺️ Think of It Like GPS Navigation
+
+When you're driving through a city:
+- **You're the intelligent, capable driver** - You navigate traffic, make decisions, handle unexpected situations
+- **GPS provides turn-by-turn instructions** - Tells you which route to follow, which turn to take next
+- **GPS doesn't drive for you** - But it ensures you don't miss critical turns or get lost
+
+**Tool-as-Guide works the same way:**
+- **Agent is the intelligent worker** - Capable of reasoning, adapting, executing tasks
+- **Guide provides step-by-step instructions** - What to do next, what protocol to follow
+- **Guide doesn't do the work** - But it ensures critical steps aren't skipped and protocols are followed
+
+The agent stays intelligent and autonomous. The guide ensures reliability and compliance.
+
+> **For the technically inclined:** The Tool-as-Guide pattern is a workflow engine with inversion of control, acting as a protocol-driven supervisor for agentic systems.
+
+---
+
+### How It Works in Practice
+
+**Key insight:** The workflow engine is a *tool* that the LLM actively queries.
 
 ```mermaid
 sequenceDiagram
@@ -44,27 +100,68 @@ sequenceDiagram
     Note over LLM,Guide: LLM drives execution<br/>Guide enforces protocol
 ```
 
-### How It Works
+**The pattern in three points:**
 
 1. **LLM/Agent has autonomy** - Drives conversation, executes tasks, makes decisions
 2. **Guide provides instructions** - What to do next, what data is needed, what validates
 3. **Protocol is enforced** - Can't skip steps, consistent behavior, auditable trail
 
-### 🗺️ Think of It Like GPS Navigation
+### 🧠 The LLM Isn't Just Following Orders
 
-When you're driving through a city:
-- **You're the intelligent, capable driver** - You know how to navigate traffic, make decisions, handle unexpected situations
-- **GPS provides turn-by-turn instructions** - It tells you which route to follow, which turn to take next
-- **GPS doesn't drive for you** - But it ensures you don't miss critical turns or get lost
+**Important:** The LLM/Agent maintains its intelligence and flexibility:
 
-**Tool-as-Guide works the same way:**
-- **Agent is the intelligent worker** - Capable of reasoning, adapting, executing tasks
-- **Guide provides step-by-step instructions** - What to do next, what protocol to follow
-- **Guide doesn't do the work** - But it ensures critical steps aren't skipped and protocols are followed
+- **Interprets user intent** - "I want something spicy" → translates to pepperoni/jalapeños
+- **Generates natural responses** - Not just relaying template text
+- **Handles unexpected input** - Clarifies, asks for details, adapts phrasing
+- **Executes complex tasks** - Queries databases, calls APIs, processes data
+- **Reasons within bounds** - Makes decisions at each step, guided by protocol
 
-The agent stays intelligent and autonomous. The guide ensures reliability and compliance.
+**The Guide enforces the protocol. The LLM provides the intelligence.**
 
-> **For the technically inclined:** The Tool-as-Guide pattern is a workflow engine with inversion of control, acting as a protocol-driven supervisor for agentic systems.
+It's like GPS: You're still the intelligent driver making decisions—GPS just ensures you don't miss critical turns.
+
+### Code Example
+
+Here's what the interaction looks like:
+
+```python
+# Agent queries the guide
+response = guide.start_workflow()
+# → {"instruction": "Ask user for pizza crust preference", 
+#    "options": ["thin", "regular", "thick"], 
+#    "required": true}
+
+# Agent uses intelligence to interact with user
+agent.ask_user("What kind of crust would you like? We have thin, regular, or thick.")
+user_says("Make it crispy!")
+
+# Agent interprets intent, sends to guide
+response = guide.continue(session_id, "thin")
+# → {"instruction": "Ask about toppings", 
+#    "category": "vegetarian", ...}
+
+# Guide controls WHAT steps. Agent controls HOW they're executed.
+```
+
+---
+
+## 📊 Example Comparison
+
+| Aspect | Pizza Ordering | Medical Triage |
+|--------|---------------|----------------|
+| **Interface** | Chat (Claude Desktop) | Autonomous Agent (Jupyter) |
+| **Use Case** | Low stakes, conversational | High stakes, critical system |
+| **AI Role** | Relays messages to user | Executes tasks autonomously |
+| **Guide Role** | Returns prompts/questions | Returns tasks & protocol decisions |
+| **Tools Used** | State machine only | State machine + DB + Classifier + Monitor |
+| **LLM** | Claude (cloud) | Gemma (local, open) |
+| **Domain Knowledge** | In guide (menu, options) | Separate classifier tool |
+| **Purpose** | Show pattern basics | Show pattern for autonomous agents |
+| **Audit Trail** | Session states | Full protocol compliance log |
+
+**Both demonstrate the same core pattern in different contexts**, showing its versatility from simple chatbots to critical autonomous systems.
+
+---
 
 ### The Architectural Inversion
 
@@ -96,62 +193,6 @@ graph TB
 
 ---
 
-## 🎬 Live Examples
-
-### 🍕 Pizza Ordering - Chat Interface
-
-![Pizza Ordering Demo](examples/01-pizza-ordering/demo.gif)
-
-A fun, approachable example showing the pattern with Claude Desktop:
-- **Guide controls**: Order of questions (crust → category → toppings → size → confirm)
-- **Claude executes**: Natural conversation, understands responses, relays questions
-- **Result**: Consistent ordering flow, can't skip steps, great UX
-
-[Try it yourself →](examples/01-pizza-ordering/)
-
----
-
-### 🏥 Medical Triage - Autonomous Agent
-
-![Medical Triage Demo](examples/02-medical-triage/demo.gif)
-
-A serious example showing the pattern with autonomous agents:
-- **Guide controls**: Clinical protocol (red flags → history → vitals → assessment)
-- **Agent executes**: Calls medical databases, queries records, processes data
-- **Result**: Protocol-compliant triage, emergency escalation, audit trail
-
-[Try it yourself →](examples/02-medical-triage/)
-
----
-
-### 🔧 cursor-extend - Coming Soon (Preview)
-
-> **⚠️ PREVIEW**: Tool for generating Tool-as-Guide implementations in Cursor IDE
-> 
-> Coming soon! This will help developers quickly generate workflow guide tools.
-> 
-> Stay tuned for announcement.
-
----
-
-## 📊 Example Comparison
-
-| Aspect | Pizza Ordering | Medical Triage |
-|--------|---------------|----------------|
-| **Interface** | Chat (Claude Desktop) | Autonomous Agent (Jupyter) |
-| **Use Case** | Low stakes, conversational | High stakes, critical system |
-| **AI Role** | Relays messages to user | Executes tasks autonomously |
-| **Guide Role** | Returns prompts/questions | Returns tasks & protocol decisions |
-| **Tools Used** | State machine only | State machine + DB + Classifier + Monitor |
-| **LLM** | Claude (cloud) | Gemma (local, open) |
-| **Domain Knowledge** | In guide (menu, options) | Separate classifier tool |
-| **Purpose** | Show pattern basics | Show pattern for autonomous agents |
-| **Audit Trail** | Session states | Full protocol compliance log |
-
-**Both demonstrate the same core pattern in different contexts**, showing its versatility from simple chatbots to critical autonomous systems.
-
----
-
 ## 🚀 Quick Start
 
 Choose an example to explore:
@@ -161,6 +202,9 @@ Chat interface demo with Claude Desktop or Cursor. Perfect for understanding the
 
 ### 🏥 [Medical Triage Example](examples/02-medical-triage/)
 Autonomous agent demo with Jupyter and local LLM. Shows the pattern for critical systems.
+
+### 🔧 cursor-extend (Coming Soon)
+> **⚠️ PREVIEW**: A tool that implements this pattern to help Cursor IDE generate workflow guides. Stay tuned!
 
 Each example includes complete setup instructions and usage guide.
 
@@ -280,14 +324,22 @@ The Tool-as-Guide pattern combines the strengths of both:
 
 ## 🤝 Contributing
 
-We welcome contributions! Especially:
+**These examples prove the pattern works. Want to see it in your domain?**
 
-- Additional example implementations
-- Integration with other workflow engines
+We'd love to see Tool-as-Guide implementations for:
+- 🛒 **E-commerce checkout flows**
+- 📞 **Customer support escalation**
+- 🚀 **Deployment pipelines with quality gates**
+- 📋 **Document review checklists**
+- 🔐 **Security incident response**
+- ...or anything where protocol matters!
+
+Also welcome:
+- Integration with workflow engines (Temporal, Prefect, etc.)
 - Documentation improvements
-- Use case descriptions
+- Use case write-ups
 
-Open an issue or pull request to get started.
+**Pull requests welcome!** Open an issue to discuss ideas first.
 
 ---
 

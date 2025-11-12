@@ -6,14 +6,16 @@ A fun, approachable demonstration of the Tool-as-Guide pattern using Claude Desk
 
 ![Pizza Ordering Demo](demo.gif)
 
-*Watch how Claude uses the pizza ordering guide to walk through a complete order workflow. The guide controls every step - Claude executes and relays!*
+*Watch how Claude uses the pizza ordering guide while maintaining its intelligence. Notice how Claude provides recommendations, makes suggestions, and adapts to natural language - all while the guide enforces the protocol!*
 
 ## What This Demonstrates
 
 A pizza ordering workflow where:
 - **Guide controls**: Order of questions (crust → category → toppings → size → confirm)
-- **Claude executes**: Natural conversation, understands responses, relays questions
-- **Result**: Consistent ordering flow, can't skip steps, great UX
+- **Claude executes**: Provides recommendations, interprets intent, generates natural responses
+- **Result**: Consistent ordering flow + intelligent assistance
+
+**Key insight:** The user asks "what do you recommend?" and "pick something for me" - Claude responds intelligently within each step, but can't skip ahead or go out of order.
 
 ### Interaction Flow
 
@@ -29,9 +31,13 @@ sequenceDiagram
     Tool-->>AI: {session_id, prompt: "What crust?", instructions}
     AI->>User: "What kind of crust would you like?"
     
-    User->>AI: "Thin crust"
-    AI->>Tool: continue_pizza_order(session_id, "Thin crust")
-    Tool->>Tool: Validate input<br/>Save crust="Thin"<br/>State: CHOOSE_CRUST → CHOOSE_CATEGORY
+    User->>AI: "What do you recommend?"
+    Note over AI: AI uses intelligence:<br/>- Explains each option<br/>- Provides reasoning<br/>- Suggests based on use case
+    AI->>User: "Thin for crispy, Regular for classic...<br/>I'd suggest Regular as a safe choice."
+    
+    User->>AI: "Regular"
+    AI->>Tool: continue_pizza_order(session_id, "Regular")
+    Tool->>Tool: Validate input<br/>Save crust="Regular"<br/>State: CHOOSE_CRUST → CHOOSE_CATEGORY
     Tool-->>AI: {prompt: "Vegetarian or meat?", next_state}
     AI->>User: "Vegetarian or meat?"
     
@@ -41,16 +47,18 @@ sequenceDiagram
     Tool-->>AI: {prompt: "Choose toppings: [Mushrooms, Olives...]"}
     AI->>User: "Choose from vegetarian toppings..."
     
-    Note over User,Tool: Pattern continues through<br/>size selection and confirmation
+    User->>AI: "Pick something for me"
+    Note over AI: AI intelligently selects<br/>and explains the choice
+    AI->>User: "Mushrooms, Bell Peppers, Onions, Tomatoes.<br/>Classic combo - balanced and flavorful!"
     
-    User->>AI: "Yes, confirm"
-    AI->>Tool: continue_pizza_order(session_id, "yes")
-    Tool->>Tool: State: CONFIRM → COMPLETE
-    Tool-->>AI: {status: "complete", message: "Order confirmed!"}
-    AI->>User: "🎉 Order confirmed! Ready in 20-30 mins"
+    User->>AI: "Sounds good!"
+    AI->>Tool: continue_pizza_order(session_id, "Mushrooms, Bell Peppers...")
+    Note over Tool: Validates toppings<br/>Advances to size
+    
+    Note over User,Tool: Pattern continues through<br/>size selection and confirmation
 ```
 
-**Key observation:** The Tool decides every step. The AI never chooses what to ask next - it only relays messages.
+**Key observation:** The Tool controls the workflow order. The AI provides intelligence, recommendations, and natural conversation - but always within the current step. Can't skip from crust to confirm!
 
 ## Installation
 
@@ -114,9 +122,27 @@ You: I want to order a pizza
 Claude: *Calls start_pizza_order()*
 Claude: Great! Let's build your perfect pizza. What kind of crust would you like?
        Options: Thin, Regular, Thick, Gluten-free
-You: Thin crust
+
+You: What do you recommend?
+Claude: For crust, it depends on your preference! Thin crust is great for a 
+       crispy texture, Regular is the classic choice, Thick is more filling...
+       I'd say Regular is a solid all-around choice. What sounds good?
+
+You: Regular
 Claude: *Calls continue_pizza_order()*
-Claude: Perfect! Thin crust it is. Would you like a vegetarian pizza or one with meat?
+Claude: Perfect! Regular crust it is. Would you like vegetarian or meat?
+
+You: Vegetarian
+Claude: *Calls continue_pizza_order()*
+Claude: Great choice! Here are vegetarian toppings: Mushrooms, Olives, 
+       Bell Peppers, Onions, Tomatoes, Spinach...
+
+You: Pick something for me
+Claude: Sure! I'll pick: Mushrooms, Bell Peppers, Onions, Tomatoes. 
+       Classic veggie combo - balanced and flavorful! Sound good?
+
+You: Yes!
+Claude: *Calls continue_pizza_order()*
 ... conversation continues ...
 ```
 
@@ -151,10 +177,15 @@ You: I want to order a pizza
 Cursor: *Calls start_pizza_order()*
 Cursor: Great! Let's build your perfect pizza. What kind of crust would you like?
        Options: Thin, Regular, Thick, Gluten-free
-You: Thin crust
+
+You: What do you recommend?
+Cursor: For crust, it depends on your preference! Thin crust is great for a 
+       crispy texture, Regular is the classic choice, Thick is more filling...
+       I'd say Regular is a solid all-around choice. What sounds good?
+
+You: Regular
 Cursor: *Calls continue_pizza_order()*
-Cursor: Perfect! Thin crust it is. Would you like a vegetarian pizza or one with meat?
-... conversation continues ...
+... conversation continues with intelligent suggestions ...
 ```
 
 ---
