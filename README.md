@@ -6,23 +6,6 @@
 
 ---
 
-## 🎯 The Problem
-
-**Autonomous AI agents are powerful but unreliable for critical workflows:**
-
-- ❌ Skip important steps
-- ❌ Inconsistent behavior across runs  
-- ❌ Hard to audit or debug
-- ❌ Can't guarantee protocol compliance
-- ❌ Unsuitable for regulated domains
-
-**Current solutions don't solve this:**
-- **Prompts**: Too fragile ("please follow these steps...")
-- **Traditional workflows**: LLM is passive, no agency
-- **Agent frameworks**: Too unpredictable for critical systems
-
----
-
 ## 🎬 See It In Action
 
 **[▶️ Watch: Pizza Ordering with Claude](examples/01-pizza-ordering/)** (60 sec) • **[▶️ Watch: Medical Triage Agent](examples/02-medical-triage/)** (15 sec)
@@ -59,7 +42,26 @@ The guide ensures compliance. The agent does the work.
 
 ---
 
+## 🎯 The Problem
+
+**Autonomous AI agents are powerful but unreliable for critical workflows:**
+
+- ❌ Skip important steps
+- ❌ Inconsistent behavior across runs  
+- ❌ Hard to audit or debug
+- ❌ Can't guarantee protocol compliance
+- ❌ Unsuitable for regulated domains
+
+**Current solutions don't solve this:**
+- **Prompts**: Too fragile ("please follow these steps...")
+- **Traditional workflows**: LLM is passive, no agency
+- **Agent frameworks**: Too unpredictable for critical systems
+
+---
+
 ## 💡 The Solution: Tool-as-Guide Pattern
+
+> **TL;DR:** The Tool-as-Guide pattern is a workflow engine with inversion of control, acting as a protocol-driven supervisor for agentic systems.
 
 ### 🗺️ Think of It Like GPS Navigation
 
@@ -74,8 +76,6 @@ When you're driving through a city:
 - **Guide doesn't do the work** - But it ensures critical steps aren't skipped and protocols are followed
 
 The agent stays intelligent and autonomous. The guide ensures reliability and compliance.
-
-> **Formally:** The Tool-as-Guide pattern is a workflow engine with inversion of control, acting as a protocol-driven supervisor for agentic systems.
 
 ---
 
@@ -321,9 +321,4 @@ Feedback is appreciated! Open a PR or issue to discuss your ideas.
 ## 📜 License
 
 MIT License
-
----
-
-**Built with ❤️ to make AI reliable for critical systems**
-
 
