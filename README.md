@@ -75,7 +75,7 @@ When you're driving through a city:
 
 The agent stays intelligent and autonomous. The guide ensures reliability and compliance.
 
-> **For the technically inclined:** The Tool-as-Guide pattern is a workflow engine with inversion of control, acting as a protocol-driven supervisor for agentic systems.
+> **Formally:** The Tool-as-Guide pattern is a workflow engine with inversion of control, acting as a protocol-driven supervisor for agentic systems.
 
 ---
 
@@ -239,16 +239,6 @@ Each example includes complete setup instructions and usage guide.
 
 ---
 
-## 📚 Documentation
-
-All documentation is in the main README and individual example folders:
-
-- **Pattern Overview** - You're reading it!
-- **Pizza Ordering Example** - See `examples/01-pizza-ordering/README.md`
-- **Medical Triage Example** - See `examples/02-medical-triage/README.md`
-
----
-
 ## 🌟 Use Cases
 
 This pattern is particularly powerful for:
@@ -324,22 +314,7 @@ The Tool-as-Guide pattern combines the strengths of both:
 
 ## 🤝 Contributing
 
-**These examples prove the pattern works. Want to see it in your domain?**
-
-We'd love to see Tool-as-Guide implementations for:
-- 🛒 **E-commerce checkout flows**
-- 📞 **Customer support escalation**
-- 🚀 **Deployment pipelines with quality gates**
-- 📋 **Document review checklists**
-- 🔐 **Security incident response**
-- ...or anything where protocol matters!
-
-Also welcome:
-- Integration with workflow engines (Temporal, Prefect, etc.)
-- Documentation improvements
-- Use case write-ups
-
-**Pull requests welcome!** Open an issue to discuss ideas first.
+Feedback is appreciated! Open a PR or issue to discuss your ideas.
 
 ---
 
