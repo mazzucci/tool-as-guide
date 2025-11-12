@@ -207,13 +207,17 @@ stateDiagram-v2
     [*] --> START
     START --> RED_FLAG_SCREENING: start_triage()
     
+    note left of RED_FLAG_SCREENING
+        Agent checks:
+        - Patient symptoms
+        - Medical history
+        - Critical conditions
+    end note
+    
     RED_FLAG_SCREENING --> EMERGENCY_ESCALATION: Critical symptoms detected
-    RED_FLAG_SCREENING --> MEDICAL_HISTORY: No red flags
+    RED_FLAG_SCREENING --> VITAL_SIGNS: No red flags (continue protocol)
     
     EMERGENCY_ESCALATION --> SAVE_RECORD: Log emergency
-    SAVE_RECORD --> COMPLETE: Triage record saved
-    
-    MEDICAL_HISTORY --> VITAL_SIGNS: History recorded
     
     note right of VITAL_SIGNS
         Mandatory step:
@@ -225,17 +229,19 @@ stateDiagram-v2
     
     SEVERITY_ASSESSMENT --> SAVE_RECORD: Assessment complete
     
+    SAVE_RECORD --> COMPLETE: Triage record saved
+    
     COMPLETE --> [*]
 ```
 
 **How it works at each state:**
 1. 🔄 Agent reports findings to guide
-2. ✅ Guide validates protocol compliance
+2. ✅ Guide validates protocol compliance  
 3. 🚨 Guide makes escalation decisions (if needed)
 4. ➡️ Guide advances to next state
 5. 💬 Guide returns next task to agent
 
-**Key insight:** The agent autonomously executes tasks, but the guide enforces the clinical protocol. The agent can't skip mandatory steps or override triage decisions.
+**Key insight:** The agent autonomously executes tasks (calling medical DB, checking history, etc.), but the guide enforces the clinical protocol. The agent can't skip mandatory steps or override triage decisions.
 
 ---
 
