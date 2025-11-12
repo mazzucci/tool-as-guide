@@ -1,0 +1,13 @@
+[project]
+name = "pizza-ordering-guide"
+version = "1.0.0"
+description = "Demonstration of the Tool-as-Guide pattern using pizza ordering"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=0.2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/pizza-ordering-guide"
+

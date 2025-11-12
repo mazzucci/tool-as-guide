@@ -1,0 +1,20 @@
+# Medical Triage Demo Dependencies
+
+# LLM Runtime
+ollama>=0.1.0
+
+# Notebook Environment
+jupyter>=1.0.0
+notebook>=7.0.0
+
+# Pretty Output (optional but recommended for demos)
+rich>=13.0.0
+
+# Note: Ollama must be installed separately
+# macOS:   brew install ollama
+# Linux:   curl -fsSL https://ollama.com/install.sh | sh
+# Windows: Download from ollama.com
+#
+# After installing Ollama, download the model:
+# ollama pull gemma:2b
+
