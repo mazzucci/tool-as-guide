@@ -278,19 +278,6 @@ The Tool-as-Guide pattern combines the strengths of both:
 
 ---
 
-## 🔧 Implementations
-
-The pattern can be implemented with various technologies:
-
-- ✅ **MCP (Model Context Protocol)** - Shown in examples
-- 🔄 **LangGraph** - State machine framework
-- 🔄 **Temporal** - Workflow engine  
-- 🔄 **Custom** - Pure Python/JavaScript
-
-**The pattern is technology-agnostic.** Choose the implementation that fits your stack.
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Especially:

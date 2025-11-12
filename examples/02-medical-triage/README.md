@@ -1,45 +1,48 @@
-# 🏥 Medical Triage - Tool-as-Guide Pattern with Autonomous Agent
+# 🏥 Medical Triage - Autonomous Agent
 
 > **⚠️ DISCLAIMER**: This is a simplified demonstration for educational purposes only. Real medical systems require clinical expertise, regulatory approval, and extensive validation. This is NOT production medical software.
 
-A demonstration of the **Tool-as-Guide pattern** using an autonomous agent to perform medical triage while following strict clinical protocols.
+A demonstration of the Tool-as-Guide pattern using an autonomous agent to perform medical triage while following strict clinical protocols.
 
----
+## 🎬 Demo
+
+![Medical Triage Demo](demo.gif)
+
+*Watch an autonomous agent perform medical triage following a clinical protocol. The guide enforces mandatory steps - the agent executes autonomously!*
 
 ## What This Demonstrates
 
-### The Key Insight
+A medical triage workflow where:
+- **Guide controls**: Clinical protocol (red flags → history → vitals → assessment)
+- **Agent executes**: Calls medical databases, queries records, processes data autonomously
+- **Result**: Protocol-compliant triage, emergency escalation, full audit trail
 
-This shows the Tool-as-Guide pattern with an **autonomous agent**:
+### Interaction Flow
 
-- **Guide Controls Workflow**: What steps to take, what order, what's mandatory
-- **Agent Controls Execution**: How to gather data, which tools to call, how to process results
+```mermaid
+sequenceDiagram
+    participant Patient
+    participant Agent as Autonomous Agent
+    participant Guide as Triage Guide (Protocol)
+    participant Tools as Medical Tools (DB, Vitals)
 
-**The agent is autonomous but the protocol is enforced.**
-
----
-
-## Architecture
-
+    Patient->>Agent: "I have severe chest pain"
+    Agent->>Guide: start_triage()
+    Guide->>Guide: Create session<br/>State: START → RED_FLAG_SCREENING
+    Guide-->>Agent: {task: "screen_red_flags", instructions: "Check for emergency symptoms"}
+    
+    Agent->>Tools: medical_db.check_conditions()
+    Agent->>Tools: symptom_classifier.classify()
+    Tools-->>Agent: Critical symptoms detected
+    Agent->>Guide: continue_triage(session_id, report)
+    Guide->>Guide: Protocol decision:<br/>RED FLAGS DETECTED<br/>State: EMERGENCY_ESCALATION
+    Guide-->>Agent: {status: "emergency", triage_level: "Level 1", message: "..."}
+    Agent->>Patient: 🚨 EMERGENCY: You need immediate medical attention...
+    
+    Note over Patient,Tools: All steps logged in audit trail
 ```
-Patient → Agent → Guide → Protocol Decision
-          ↓              ↓
-        Tools       Next Step
-        (DB, Vitals)
-```
 
-### How It Works
-
-1. **Agent receives task from guide**: "Screen for red flag symptoms"
-2. **Agent autonomously executes**:
-   - Calls `medical_db.check_conditions()`
-   - Uses LLM to extract symptoms
-   - Queries patient history
-3. **Agent reports findings to guide**
-4. **Guide makes protocol decision**:
-   - Emergency escalation if red flags
-   - Or continue to next step
-5. **Repeat until complete**
+**Key observation:** The guide enforces the protocol. The agent can't skip red flag screening, can't decide triage levels—it must follow the clinical workflow.
 
 ---
 
@@ -92,31 +95,6 @@ jupyter notebook medical_triage_demo.ipynb
 **Important:** When the notebook opens, select the **"Medical Triage (Python 3.11)"** kernel from the Kernel menu (Kernel → Change Kernel) to use the virtual environment with all dependencies.
 
 Then execute cells one by one to see the agent-guide interaction.
-
-### What You'll See
-
-```
-🚑 NEW PATIENT ARRIVAL
-
-📋 Guide → Agent:
-   Task: screen_red_flags
-   Instructions: Check for emergency symptoms (mandatory protocol)
-
-🤖 Agent executing...
-   ✓ Called: medical_db.check_conditions()
-   ✓ Analyzed patient statement with LLM
-   ✓ Found: severe chest pain, cardiac history
-
-📋 Guide decision:
-   🚨 EMERGENCY ESCALATION
-   Triage Level: IMMEDIATE
-   Protocol: Emergency Cardiac Protocol
-
-✅ Audit Trail:
-   ✓ Red flag screening - completed
-   ✓ Emergency protocol - activated
-   ✓ All mandatory steps - followed
-```
 
 ---
 
@@ -222,16 +200,42 @@ class VitalsMonitor:
 
 ---
 
-## Extending This Demo
+## State Machine Flow
 
-To adapt this for real medical systems, you would need:
+```mermaid
+stateDiagram-v2
+    [*] --> START
+    START --> RED_FLAG_SCREENING: start_triage()
+    
+    RED_FLAG_SCREENING --> EMERGENCY_ESCALATION: Critical symptoms detected
+    RED_FLAG_SCREENING --> MEDICAL_HISTORY: No red flags
+    
+    EMERGENCY_ESCALATION --> SAVE_RECORD: Log emergency
+    SAVE_RECORD --> COMPLETE: Triage record saved
+    
+    MEDICAL_HISTORY --> VITAL_SIGNS: History recorded
+    
+    note right of VITAL_SIGNS
+        Mandatory step:
+        Cannot skip vital signs
+        in standard protocol
+    end note
+    
+    VITAL_SIGNS --> SEVERITY_ASSESSMENT: Vitals recorded
+    
+    SEVERITY_ASSESSMENT --> SAVE_RECORD: Assessment complete
+    
+    COMPLETE --> [*]
+```
 
-- **Clinical validation** by medical professionals
-- **Real medical logic** (validated triage algorithms like ESI/CTAS, clinical NLP)
-- **EMR/EHR integration** (FHIR APIs, secure patient data)
-- **Regulatory compliance** (HIPAA, FDA)
-- **Security** (authentication, encryption, access controls)
-- **Persistent audit logs** and compliance reporting
+**How it works at each state:**
+1. 🔄 Agent reports findings to guide
+2. ✅ Guide validates protocol compliance
+3. 🚨 Guide makes escalation decisions (if needed)
+4. ➡️ Guide advances to next state
+5. 💬 Guide returns next task to agent
+
+**Key insight:** The agent autonomously executes tasks, but the guide enforces the clinical protocol. The agent can't skip mandatory steps or override triage decisions.
 
 ---
 
